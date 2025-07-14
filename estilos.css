@@ -12,12 +12,22 @@ h1 {
   margin-bottom: 30px;
 }
 
+h2 {
+  color: #003366;
+  margin-top: 40px;
+  border-left: 5px solid #007bff;
+  padding-left: 10px;
+}
+
+.seccion {
+  margin-bottom: 40px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  margin-top: 15px;
 }
 
 .curso {
@@ -51,10 +61,4 @@ h1 {
   color: #888;
   pointer-events: none;
   box-shadow: none;
-}
-
-@media (max-width: 600px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
 }
