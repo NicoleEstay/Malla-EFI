@@ -1,1 +1,40 @@
+body {
+    background: #f5f9ff;
+    color: #222;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.ramo {
+    background: #cce4ff;
+    border: 2px solid #007bff;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.ramo.bloqueado {
+    background: #e0e0e0;
+    border: 2px dashed #999;
+    color: #999;
+    pointer-events: none;
+}
+
+.ramo.aprobado {
+    background: #007bff;
+    color: white;
+}
 
