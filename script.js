@@ -1,58 +1,76 @@
-// Lista de ramos y sus prerrequisitos simplificados desde tu PDF
-const ramos = [
-    { nombre: "Habilidades comunicativas", requisitos: [] },
-    { nombre: "Anatomía para el movimiento humano", requisitos: [] },
-    { nombre: "Expresión corporal y creatividad", requisitos: [] },
-    { nombre: "Fundamento sociológicos de la educación", requisitos: [] },
-    { nombre: "Política educativa", requisitos: [] },
-    { nombre: "Fundamento de educación física y el juego", requisitos: [] },
+const cursos = {
+  "Habilidades comunicativas": [],
+  "Anatomía para el movimiento humano": [],
+  "Expresión corporal y creatividad": [],
+  "Política educativa ; y fundamento sociológico de la eduación": [],
+  "Fundamento de educación física y el juego": [],
+  "Vida activa y saludable": [],
+  "Análisis del movimiento humano": ["Anatomía para el movimiento humano"],
+  "Desarrollo aprendizaje motor": [],
+  "Metodología del atletismo": [],
+  "Currículum": ["Política educativa ; y fundamento sociológico de la eduación"],
+  "Práctica de intervención I": ["Política educativa ; y fundamento sociológico de la eduación", "Estrategias metodológicas y evaluativas I"],
+  "Psicología del aprendizaje": [],
+  "Electiva formación integral": [],
+  "Estrategias metodológicas y evaluativas I": ["Currículum"],
+  "Sistemas energéticos y evaluativas I": ["Desarrollo aprendizaje motor"],
+  "Metodología balonmano": ["Currículum"],
+  "Metodología natación": ["Currículum"],
+  "Actividades en el medio acuático": ["Metodología natación"],
+  "Investigación educativa": ["Práctica de intervención I"],
+  "Estrategias metodológicas y evaluativas II": ["Estrategias metodológicas y evaluativas I"],
+  "Gimnasia artística": ["Estrategias metodológicas y evaluativas I"],
+  "Metodología del baloncesto": ["Estrategias metodológicas y evaluativas I"],
+  "Práctica de intervención II": ["Práctica de intervención I"],
+  "Proyectos deportivos, educación y sociales": ["Práctica de intervención II"],
+  "Educación para la democracia": [],
+  "Fisiología de la actividad física": [],
+  "Metodología del hockey": ["Estrategias metodológicas y evaluativas II"],
+  "Estrategias metodológicas y evaluativas III": ["Estrategias metodológicas y evaluativas II"],
+  "Evaluación de desarrollo de competencias hito I": ["Estrategias metodológicas y evaluativas II"]
+};
 
-    { nombre: "Vida activa y saludable", requisitos: [] },
-    { nombre: "Análisis del movimiento humano", requisitos: ["Anatomía para el movimiento humano"] },
-    { nombre: "Desarrollo aprendizaje motor", requisitos: [] },
-    { nombre: "Metodología del atletismo", requisitos: [] },
-    { nombre: "Currículum", requisitos: ["Fundamento sociológicos de la educación", "Política educativa"] },
-    { nombre: "Práctica de intervención I", requisitos: ["Fundamento sociológicos de la educación", "Política educativa"] },
-    { nombre: "Psicología del aprendizaje", requisitos: [] },
-
-    // Agrega el resto de los ramos siguiendo el mismo formato...
-];
-
-let aprobados = [];
+const estados = {}; // guarda estado de cada ramo
 
 const contenedor = document.getElementById("malla");
 
-function crearBotones() {
-    contenedor.innerHTML = "";
-    ramos.forEach(ramo => {
-        const btn = document.createElement("div");
-        btn.classList.add("ramo");
-
-        if (!requisitosCumplidos(ramo)) {
-            btn.classList.add("bloqueado");
-        } else if (aprobados.includes(ramo.nombre)) {
-            btn.classList.add("aprobado");
-        }
-
-        btn.innerText = ramo.nombre;
-
-        btn.addEventListener("click", () => {
-            if (!btn.classList.contains("bloqueado")) {
-                if (aprobados.includes(ramo.nombre)) {
-                    aprobados = aprobados.filter(nombre => nombre !== ramo.nombre);
-                } else {
-                    aprobados.push(ramo.nombre);
-                }
-                crearBotones();
-            }
-        });
-
-        contenedor.appendChild(btn);
-    });
+function crearCurso(nombre) {
+  const div = document.createElement("div");
+  div.className = "curso bloqueado";
+  div.textContent = nombre;
+  div.onclick = () => aprobarCurso(nombre, div);
+  return div;
 }
 
-function requisitosCumplidos(ramo) {
-    return ramo.requisitos.every(req => aprobados.includes(req));
+function estaDesbloqueado(nombre) {
+  const prereqs = cursos[nombre];
+  return prereqs.every(pr => estados[pr]);
 }
 
-crearBotones();
+function aprobarCurso(nombre, elemento) {
+  estados[nombre] = true;
+  elemento.classList.remove("bloqueado");
+  elemento.classList.add("aprobado");
+  actualizarMalla();
+}
+
+function actualizarMalla() {
+  document.querySelectorAll(".curso").forEach(curso => {
+    const nombre = curso.textContent;
+    if (estados[nombre]) {
+      curso.className = "curso aprobado";
+    } else if (estaDesbloqueado(nombre)) {
+      curso.className = "curso";
+    } else {
+      curso.className = "curso bloqueado";
+    }
+  });
+}
+
+// Render inicial
+for (const nombre in cursos) {
+  estados[nombre] = false;
+  const cursoEl = crearCurso(nombre);
+  contenedor.appendChild(cursoEl);
+}
+actualizarMalla();
